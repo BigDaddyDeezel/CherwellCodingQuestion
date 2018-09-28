@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>   
+    <title></title>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#btn').click(function () {
+                $('#items').empty();
+                var triToFind = $('#triLbl').val();
+                $.ajax({
+                    url: "/api/Grid/GetTriangleByLabel?Label=" + triToFind,
+                    success: function (Data) {
+                        if (Data != null) {
+                            $.each(Data, function (key, val) {
+                                var str = '(' + val.X + ',' + val.Y + ')';
+                                $('<li/>', { text: str }).appendTo($('#items'));
+                            })
+                        }
+                        else
+                        {
+                            $('<li/>', { text: "TRIANGLE NOT FOUND!" }).appendTo($('#items'));
+                        }
+                    },
+                    error: function () {
+                        $('<li/>', { text: "ERROR EXECUTING [GetTriangleByLabel]!" }).appendTo($('#items'));
+                    }
+                });
+            });
+
+            $('#btn2').click(function () {
+                $('#items').empty();
+                var vert1x = $('#vert1x').val();
+                var vert1y = $('#vert1y').val();
+                var vert2x = $('#vert2x').val();
+                var vert2y = $('#vert2y').val();
+                var vert3x = $('#vert3x').val();
+                var vert3y = $('#vert3y').val();
+                $.ajax({
+                    url: "/api/Grid/GetTriangleByVertices?" +
+                        "x1=" + vert1x + "&" +
+                        "y1=" + vert1y + "&" +
+                        "x2=" + vert2x + "&" +
+                        "y2=" + vert2y + "&" +
+                        "x3=" + vert3x + "&" +
+                        "y3=" + vert3y,
+                    success: function (Data) {
+                        if (Data != '')
+                        {
+                            $('<li/>', { text: Data }).appendTo($('#items'));
+                        }
+                        else
+                        {
+                            $('<li/>', { text: "TRIANGLE NOT FOUND!" }).appendTo($('#items'));
+                        }
+                    },
+                    error: function() {
+                        $('<li/>', { text: "ERROR EXECUTING [GetTriangleByVertices]!" }).appendTo($('#items'));
+                    }                    
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <br />
+    <br />
+    <label>Triangle to find (by label):</label>
+    <p></p>
+    <input type="text" id="triLbl"/>
+    <input id="btn" type ="button" value="Search..." />    
+    <br />
+    <br />
+    <br />
+    <label>Triangle to find (by vertices):</label>
+    <p></p>
+    <table>
+        <tr>
+            <td>Vertex 1: </td>
+            <td><input type="text" id="vert1x" /></td>
+            <td><input type="text" id="vert1y" /></td>
+        </tr>
+        <tr>
+            <td>Vertex 2: </td>
+            <td><input type="text" id="vert2x" /></td>
+            <td><input type="text" id="vert2y" /></td>
+        </tr>
+        <tr>
+            <td>Vertex 3:</td>
+            <td><input type="text" id="vert3x" /></td>
+            <td><input type="text" id="vert3y" /></td>
+        </tr>
+    </table>
+    <input id="btn2" type="button" value="Search..." />
+    <br />
+    <br />
+    <br />
+    <label>RESULTS:</label>
+    <ul id="items" />
+</body>
+</html>
